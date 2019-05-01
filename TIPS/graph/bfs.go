@@ -86,16 +86,33 @@ func (g *ItemGraph) Traverse(f func(*Node)) {
 	g.lock.RUnlock()
 }
 
-// Search search node by item in graph, wrapper on traverse
-func (g *ItemGraph) Search(item Item) *Node {
-	n := new(Node)
-	g.Traverse(func(node *Node) {
-		if n != nil {
-			return
+// TraverseWithStart BFS implementation with start node
+func (g *ItemGraph) TraverseWithStart(n *Node, f func(*Node)) {
+	g.lock.RLock()
+	q := NodeQueue{}
+	q.New()
+	q.Enqueue(*n)
+	visited := make(map[*Node]bool)
+	visited[n] = true
+
+	for {
+		if q.IsEmpty() {
+			break
 		}
-		if node.Value == item {
-			*n = *node
+		node := q.Dequeue()
+		visited[node] = true
+		near := g.edges[*node]
+
+		for i := 0; i < len(near); i++ {
+			j := near[i]
+			if !visited[j] && j.Value.Access {
+				q.Enqueue(*j)
+				visited[j] = true
+			}
 		}
-	})
-	return n
+		if f != nil {
+			f(node)
+		}
+	}
+	g.lock.RUnlock()
 }

@@ -7,7 +7,11 @@ import (
 )
 
 // Item what node save
-type Item string
+type Item struct {
+	Cord   [2]int
+	Access bool
+	Value  int
+}
 
 // Node a single node that composes the tree
 type Node struct {

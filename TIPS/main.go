@@ -3,35 +3,26 @@ package main
 import (
 	"fmt"
 	"quarto-semestri/TIPS/graph"
+	"quarto-semestri/TIPS/grid"
 )
 
 func main() {
-	g := fillGraph()
-	g.String()
-	g.Traverse(func(n *graph.Node) {
-		fmt.Printf("%v\n", n)
+	g, start, end := grid.New(11, [2]int{2, 2}, [2]int{3, 3}, [][2]int{{2, 3}, {2, 9}, {3, 2}})
+	find := false
+	g.TraverseWithStart(start, func(node *graph.Node) {
+		if find {
+			return
+		}
+
+		if *end == *node {
+			find = true
+			fmt.Println("FIND")
+		}
+		fmt.Println(node, end)
+		g.AddPath(node.Value.Cord)
+		printLine()
+		g.Print()
 	})
 }
 
-func fillGraph() *graph.ItemGraph {
-	g := new(graph.ItemGraph)
-	nA := graph.Node{Value: "A"}
-	nB := graph.Node{Value: "B"}
-	nC := graph.Node{Value: "C"}
-	nD := graph.Node{Value: "D"}
-	nE := graph.Node{Value: "E"}
-	nF := graph.Node{Value: "F"}
-	g.AddNode(&nA)
-	g.AddNode(&nB)
-	g.AddNode(&nC)
-	g.AddNode(&nD)
-	g.AddNode(&nE)
-	g.AddNode(&nF)
-	g.AddEdge(&nA, &nB)
-	g.AddEdge(&nA, &nC)
-	g.AddEdge(&nB, &nE)
-	g.AddEdge(&nC, &nE)
-	g.AddEdge(&nE, &nF)
-	g.AddEdge(&nD, &nA)
-	return g
-}
+func printLine() { fmt.Println("----------------------------------") }
