@@ -67,14 +67,14 @@ func (g *Grid) Print(w io.Writer) error {
 	fmt.Print("\n")
 	for i := 0; i < g.size; i++ {
 		for j := 0; j < g.size; j++ {
-			cord := [2]int{j, i}
+			cord := [2]int{i, j}
 			switch {
 			case cord == g.start:
 				if _, err := fmt.Fprintf(w, start, "Q0"); err != nil {
 					return err
 				}
 			case cord == g.end:
-				if _, err := fmt.Fprintf(w, end, "Q1"); err != nil {
+				if _, err := fmt.Fprintf(w, end, "Qt"); err != nil {
 					return err
 				}
 			case g.IsBanned(cord):

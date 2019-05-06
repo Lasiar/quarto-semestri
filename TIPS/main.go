@@ -51,15 +51,17 @@ func main() {
 			return
 		}
 
-		i++
 		if *endOnGrid == *node {
 			find = true
 		}
-		fmt.Println(node.Value.Cord, i, time.Since(dt))
+		fmt.Printf("cord: %v,\titer: %v,\ttime duration: %v\n", node.Value.Cord, i, time.Since(dt))
+		i++
+
 	})
 	if !find {
 		log.Printf("end node not available with start node")
 	}
+	fmt.Println("summary time: ", time.Since(dt))
 }
 
 func getUserInitialParameters() (start, end [2]int, banned [][2]int) {
