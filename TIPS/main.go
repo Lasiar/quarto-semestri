@@ -57,6 +57,9 @@ func main() {
 		}
 		fmt.Println(node.Value.Cord, i, time.Since(dt))
 	})
+	if !find {
+		log.Printf("end node not available with start node")
+	}
 }
 
 func getUserInitialParameters() (start, end [2]int, banned [][2]int) {
