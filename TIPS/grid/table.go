@@ -2,6 +2,7 @@ package grid
 
 import (
 	"fmt"
+	"io"
 	"quarto-semestri/TIPS/graph"
 )
 
@@ -62,25 +63,37 @@ func New(size int, start, end [2]int, banned [][2]int) (grid *Grid, startNode, e
 }
 
 // Print print grid in stdout
-func (g *Grid) Print() {
+func (g *Grid) Print(w io.Writer) error {
+	fmt.Print("\n")
 	for i := 0; i < g.size; i++ {
 		for j := 0; j < g.size; j++ {
 			cord := [2]int{j, i}
 			switch {
 			case cord == g.start:
-				fmt.Printf("\t"+start, "s")
+				if _, err := fmt.Fprintf(w, start, "Q0"); err != nil {
+					return err
+				}
 			case cord == g.end:
-				fmt.Printf("\t"+end, "e")
+				if _, err := fmt.Fprintf(w, end, "Q1"); err != nil {
+					return err
+				}
 			case g.IsBanned(cord):
-				fmt.Printf("\t"+banned, "b")
+				if _, err := fmt.Fprintf(w, banned, "x "); err != nil {
+					return err
+				}
 			case g.IsPath(cord):
-				fmt.Printf("\t"+path, "p")
+				if _, err := fmt.Fprintf(w, path, "+ "); err != nil {
+					return err
+				}
 			default:
-				fmt.Printf("\t"+node, "n")
+				if _, err := fmt.Fprintf(w, node, "+ "); err != nil {
+					return err
+				}
 			}
 		}
 		fmt.Print("\n")
 	}
+	return nil
 }
 
 // IsBanned return true if node in this cord banned
