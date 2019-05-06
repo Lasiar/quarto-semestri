@@ -87,7 +87,7 @@ func (g *ItemGraph) Traverse(f func(*Node)) {
 }
 
 // TraverseWithStart BFS implementation with start node
-func (g *ItemGraph) TraverseWithStart(n *Node, f func(*Node)) {
+func (g *ItemGraph) TraverseWithStart(n *Node, f func(*Node) bool) {
 	g.lock.RLock()
 	q := NodeQueue{}
 	q.New()
@@ -111,7 +111,9 @@ func (g *ItemGraph) TraverseWithStart(n *Node, f func(*Node)) {
 			}
 		}
 		if f != nil {
-			f(node)
+			if !f(node) {
+				return
+			}
 		}
 	}
 	g.lock.RUnlock()

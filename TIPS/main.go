@@ -46,9 +46,9 @@ func main() {
 	find := false
 
 	i := 0
-	g.TraverseWithStart(startOnGrid, func(node *graph.Node) {
+	g.TraverseWithStart(startOnGrid, func(node *graph.Node) bool {
 		if find {
-			return
+			return false
 		}
 
 		if *endOnGrid == *node {
@@ -56,7 +56,7 @@ func main() {
 		}
 		fmt.Printf("cord: %v,\titer: %v,\ttime duration: %v\n", node.Value.Cord, i, time.Since(dt))
 		i++
-
+		return true
 	})
 	if !find {
 		log.Printf("end node not available with start node")
