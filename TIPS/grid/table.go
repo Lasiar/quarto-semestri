@@ -2,8 +2,8 @@ package grid
 
 import (
 	"fmt"
+	"github.com/Lasiar/quarto-semestri/TIPS/graph"
 	"io"
-	"quarto-semestri/TIPS/graph"
 )
 
 const (
