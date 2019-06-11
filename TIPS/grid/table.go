@@ -7,26 +7,47 @@ import (
 	"github.com/Lasiar/quarto-semestri/TIPS/graph"
 )
 
-const (
-	start  = "\033[1;34m%s\033[0m"
-	end    = "\033[1;36m%s\033[0m"
-	node   = "\033[1;33m%s\033[0m"
-	banned = "\033[1;31m%s\033[0m"
-	path   = "\033[1;235m%s\033[0m"
-)
+type printConfig struct {
+	start  string
+	end    string
+	node   string
+	banned string
+	path   string
+}
+
+func (pc *printConfig) setWindows() {
+	pc.start = "%s"
+	pc.end = "%s"
+	pc.node = "%s"
+	pc.banned = "%s"
+	pc.path = "%s"
+}
+func (pc *printConfig) setLinux() {
+	pc.start = "\033[1;34m%s\033[0m"
+	pc.end = "\033[1;36m%s\033[0m"
+	pc.node = "\033[1;33m%s\033[0m"
+	pc.banned = "\033[1;31m%s\033[0m"
+	pc.path = "\033[1;235m%s\033[0m"
+}
 
 // Grid grid implementation
 type Grid struct {
 	graph.ItemGraph
-	size       int
-	start, end [2]int
-	banned     [][2]int
-	path       [][2]int
+	size        int
+	start, end  [2]int
+	banned      [][2]int
+	path        [][2]int
+	printConfig printConfig
 }
 
 // New create new grid
-func New(size int, start, end [2]int, banned [][2]int) (grid *Grid, startNode, endNode *graph.Node) {
+func New(size int, start, end [2]int, banned [][2]int, isWindows bool) (grid *Grid, startNode, endNode *graph.Node) {
 	grid = new(Grid)
+	if isWindows {
+		grid.printConfig.setWindows()
+	} else {
+		grid.printConfig.setLinux()
+	}
 	grid.end = end
 	grid.start = start
 	grid.size = size
@@ -71,23 +92,23 @@ func (g *Grid) Print(w io.Writer) error {
 			cord := [2]int{i, j}
 			switch {
 			case cord == g.start:
-				if _, err := fmt.Fprintf(w, start, "Q0"); err != nil {
+				if _, err := fmt.Fprintf(w, g.printConfig.start, "Q0"); err != nil {
 					return err
 				}
 			case cord == g.end:
-				if _, err := fmt.Fprintf(w, end, "Qt"); err != nil {
+				if _, err := fmt.Fprintf(w, g.printConfig.end, "Qt"); err != nil {
 					return err
 				}
 			case g.IsBanned(cord):
-				if _, err := fmt.Fprintf(w, banned, "x "); err != nil {
+				if _, err := fmt.Fprintf(w, g.printConfig.banned, "x "); err != nil {
 					return err
 				}
 			case g.IsPath(cord):
-				if _, err := fmt.Fprintf(w, path, "+ "); err != nil {
+				if _, err := fmt.Fprintf(w, g.printConfig.path, "+ "); err != nil {
 					return err
 				}
 			default:
-				if _, err := fmt.Fprintf(w, node, "+ "); err != nil {
+				if _, err := fmt.Fprintf(w, g.printConfig.node, "+ "); err != nil {
 					return err
 				}
 			}

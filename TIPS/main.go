@@ -18,14 +18,15 @@ import (
 
 var (
 	start, end, banned string
-	def                bool
+	def, isWindows     bool
 )
 
 func init() {
-	flag.StringVar(&start, "start", "71,71", "")
+	flag.StringVar(&start, "start", "6,6", "")
 	flag.StringVar(&end, "end", "0,0", "")
-	flag.StringVar(&banned, "banned", "", "")
+	flag.StringVar(&banned, "banned", "1,1", "")
 	flag.BoolVar(&def, "default", true, "")
+	flag.BoolVar(&isWindows, "isWindows", false, "")
 	flag.Parse()
 }
 
@@ -37,7 +38,7 @@ func main() {
 		return
 	}
 
-	g, startOnGrid, endOnGrid := grid.New(72, s, e, b)
+	g, startOnGrid, endOnGrid := grid.New(8, s, e, b, isWindows)
 
 	if err := g.Print(os.Stdout); err != nil {
 		log.Fatalf("error write to file %v", err)
