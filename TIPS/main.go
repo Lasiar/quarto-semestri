@@ -5,10 +5,11 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"github.com/Lasiar/quarto-semestri/TIPS/graph"
-	"github.com/Lasiar/quarto-semestri/TIPS/grid"
 	"log"
 	"os"
+
+	"github.com/Lasiar/quarto-semestri/TIPS/graph"
+	"github.com/Lasiar/quarto-semestri/TIPS/grid"
 
 	"strconv"
 	"strings"
