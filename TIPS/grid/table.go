@@ -113,7 +113,7 @@ func (g *Grid) Print(w io.Writer) error {
 				}
 			}
 		}
-		fmt.Print("\n")
+		fmt.Fprint(w, "\n")
 	}
 	return nil
 }

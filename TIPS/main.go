@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"errors"
 	"flag"
 	"fmt"
@@ -22,7 +23,7 @@ var (
 )
 
 func init() {
-	flag.StringVar(&start, "start", "6,6", "")
+	flag.StringVar(&start, "start", "10,10", "")
 	flag.StringVar(&end, "end", "0,0", "")
 	flag.StringVar(&banned, "banned", "1,1", "")
 	flag.BoolVar(&def, "default", true, "")
@@ -31,14 +32,15 @@ func init() {
 }
 
 func main() {
-
+	logPath := new(bytes.Buffer)
+	tablePath := new(bytes.Buffer)
 	s, e, b := parseInital()
 	if err := validCord(s, e, b); err != nil {
 		log.Println(err)
 		return
 	}
 
-	g, startOnGrid, endOnGrid := grid.New(8, s, e, b, isWindows)
+	g, startOnGrid, endOnGrid := grid.New(72, s, e, b, isWindows)
 
 	if err := g.Print(os.Stdout); err != nil {
 		log.Fatalf("error write to file %v", err)
@@ -57,10 +59,21 @@ func main() {
 		if *endOnGrid == *node {
 			find = true
 		}
-		fmt.Printf("cord: %v,\titer: %v,\ttime duration: %v\n", node.Value.Cord, i, time.Since(dt))
+
+		g.AddPath(node.Value.Cord)
+		if err := g.Print(tablePath); err != nil {
+			log.Fatalf("error write to file %v", err)
+		}
+		tablePath.WriteString("\n")
+
+		fmt.Fprintf(logPath, "cord: %v,\titer: %v,\ttime duration: %v\n", node.Value.Cord, i, time.Since(dt))
 		i++
 		return true
 	})
+	if false {
+		fmt.Println(tablePath.String())
+	}
+	fmt.Println(logPath.String())
 	if !find {
 		log.Printf("end node not available with start node")
 	}
